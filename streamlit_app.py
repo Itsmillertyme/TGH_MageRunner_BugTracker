@@ -6,13 +6,34 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
+DATA_FILE = "bug"
+
+def load_data():
+    try:
+        return pd.read_csv(DATA_FILE)
+    except FileNotFoundError:
+        # Return default ticket if file not found
+        return pd.DataFrame([{
+            "ID": "TICKET-9999",
+            "Issue": "DEFAULT BUG TICKET",
+            "System": "Unassigned",
+            "Status": "Open",
+            "Priority": "High",
+            "Developer": "Unassigned",
+            "Date Submitted": datetime.datetime.now().strftime("%m-%d-%Y")
+        }])
+
+def save_data(df):
+    df.to_csv(DATA_FILE, index=False)
+
+
 # Show app title and description.
 st.set_page_config(page_title="MageRunner Bug Tracker", page_icon="🐛")
 st.title("🐛 MageRunner Bug Tracker")
 
 
 # Create a random Pandas dataframe with existing tickets.
-if "df" not in st.session_state:
+# if "df" not in st.session_state:
 
     # # Set seed for reproducibility.
     # np.random.seed(42)
@@ -53,20 +74,24 @@ if "df" not in st.session_state:
     #     ],
     # }
 
-    data = {
-        "ID": [f"TICKET-9999"],
-        "Issue": "DEFAULT BUG TICKET",
-        "System": "Unassigned",
-        "Status": "Open",
-        "Priority": "High",
-        "Developer": "Unassigned",
-        "Date Submitted": datetime.datetime.now().strftime("%m-%d-%Y")
-    }
-    df = pd.DataFrame(data)
+    # data = {
+    #     "ID": [f"TICKET-9999"],
+    #     "Issue": "DEFAULT BUG TICKET",
+    #     "System": "Unassigned",
+    #     "Status": "Open",
+    #     "Priority": "High",
+    #     "Developer": "Unassigned",
+    #     "Date Submitted": datetime.datetime.now().strftime("%m-%d-%Y")
+    # }
+    # df = pd.DataFrame(data)
 
-    # Save the dataframe in session state (a dictionary-like object that persists across
-    # page runs). This ensures our data is persisted when the app updates.
-    st.session_state.df = df
+    # # Save the dataframe in session state (a dictionary-like object that persists across
+    # # page runs). This ensures our data is persisted when the app updates.
+    # st.session_state.df = df
+
+
+if "df" not in st.session_state:
+    st.session_state.df = load_data()
 
 
 # Show a section to add a new ticket.
@@ -99,9 +124,12 @@ if submitted:
     )
 
     # Show a little success message.
-    st.write("Ticket submitted! Here are the details:")
+    st.write("Bug submitted! Here are the details:")
     st.dataframe(df_new, use_container_width=True, hide_index=True)
     st.session_state.df = pd.concat([df_new, st.session_state.df], axis=0)
+
+    #Save entry to data file
+    save_data(st.session_state.df)
 
 # Show section to view and edit existing tickets in a table.
 st.header("Existing tickets")
@@ -152,6 +180,11 @@ edited_df = st.data_editor(
     # Disable editing the ID and Date Submitted columns.
     disabled=["ID", "Date Submitted"],
 )
+
+if not edited_df.equals(st.session_state.df):
+    st.session_state.df = edited_df
+    save_data(edited_df)
+    st.success("Changes saved.")
 
 # Show some metrics and charts about the ticket.
 st.header("Statistics")
