@@ -97,12 +97,13 @@ if "df" not in st.session_state:
 # Show a section to add a new ticket.
 st.header("Add a Bug to Track")
 
-# We're adding tickets via an `st.form` and some input widgets. If widgets are used
-# in a form, the app will only rerun once the submit button is pressed.
-with st.form("add_bug_form"):
-    issue = st.text_area("Describe the issue")
-    priority = st.selectbox("Priority", ["High", "Medium", "Low"])
-    submitted = st.form_submit_button("Submit")
+col1,col2,col3 = st.columns([1,2,1])
+
+with col2:
+    with st.form("add_bug_form"):
+        issue = st.text_area("Describe the issue")
+        priority = st.selectbox("Priority", ["High", "Medium", "Low"])
+        submitted = st.form_submit_button("Submit")
 
 if submitted:
     # Make a dataframe for the new ticket and append it to the dataframe in session
