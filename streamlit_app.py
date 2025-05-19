@@ -14,13 +14,13 @@ def load_data():
     except FileNotFoundError:
         # Return default ticket if file not found
         return pd.DataFrame([{
-            "ID": "TICKET-9999",
+            "ID": "TICKET-00000",
             "Issue": "DEFAULT BUG TICKET",
             "System": "Unassigned",
             "Status": "Open",
             "Priority": "High",
             "Developer": "Unassigned",
-            "Date Submitted": datetime.datetime.now().strftime("%m-%d-%Y")
+            "Date Submitted": datetime.datetime.now().strftime("%m-%d-%Y, %H:%M")
         }])
 
 def save_data(df):
