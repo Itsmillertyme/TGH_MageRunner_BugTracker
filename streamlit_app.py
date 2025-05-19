@@ -28,7 +28,7 @@ def save_data(df):
 
 
 # Show app title and description.
-st.set_page_config(page_title="MageRunner Bug Tracker", page_icon="🐛")
+st.set_page_config(page_title="MageRunner Bug Tracker", page_icon="🐛", layout="wide")
 st.title("🐛 MageRunner Bug Tracker")
 
 
