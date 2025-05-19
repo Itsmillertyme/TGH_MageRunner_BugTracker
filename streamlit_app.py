@@ -64,7 +64,7 @@ if submitted:
     # state.
     recent_ticket_number = int(max(st.session_state.df.ID).split("-")[1])
     status = statuses[0]
-    today = datetime.datetime.now().strftime("%m-%d-%Y")
+    today = datetime.datetime.now().strftime("%m-%d-%Y, %H:%M")
     df_new = pd.DataFrame(
         [
             {
@@ -97,8 +97,7 @@ st.info(
     icon="✍️",
 )
 
-# Show the tickets dataframe with `st.data_editor`. This lets the user edit the table
-# cells. The edited data is returned as a new dataframe.
+
 edited_df = st.data_editor(
     st.session_state.df,
     use_container_width=True,
