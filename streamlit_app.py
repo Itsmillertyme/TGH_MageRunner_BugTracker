@@ -1,9 +1,9 @@
 import datetime
-import random
 
 import altair as alt
 import numpy as np
 import pandas as pd
+from  pandas.errors import EmptyDataError
 import streamlit as st
 
 #CONSTANT VARIABLES
@@ -17,7 +17,7 @@ statuses = ["Open", "In Progress", "Closed"]
 def load_data():
     try:
         return pd.read_csv(DATA_FILE)
-    except FileNotFoundError:
+    except (FileNotFoundError, EmptyDataError):
         # Return default ticket if file not found
         return pd.DataFrame([{
             "ID": "TICKET-00000",
